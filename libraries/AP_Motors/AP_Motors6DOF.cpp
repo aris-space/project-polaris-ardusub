@@ -178,7 +178,7 @@ void AP_Motors6DOF::setup_motors(motor_frame_class frame_class, motor_frame_type
 
     case SUB_FRAME_CUSTOM: // custon frame added for our specific use case
         _frame_class_string = "CUSTOM";
-        add_motor_raw_6dof(AP_MOTORS_MOT_1, 0, 0.06553911,-0.03059273, 0, 1.0f, 0, 1);  // forward thruster (x)
+        add_motor_raw_6dof(AP_MOTORS_MOT_1, 0, 0 ,0, 0, 1.0f, 0, 1);  // forward thruster (x)
         add_motor_raw_6dof(AP_MOTORS_MOT_2, 0.09795918 , 0, 1.0f, 0, 0, -1.0f, 2); // lateral back thruster (y)
         add_motor_raw_6dof(AP_MOTORS_MOT_3, 0.09795918 , 0, -0.96367113, 0, 0, -1.0f, 3); // lateral front thruster (y)
         add_motor_raw_6dof(AP_MOTORS_MOT_4, -0.9755102 , 1.0f, 0, 1.0f, 0, 0, 4);  // updwards right thruster (z)
