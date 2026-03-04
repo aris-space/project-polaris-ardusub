@@ -514,7 +514,20 @@ void AP_Baro_MS56XX::_calculate_5837()
     pressure = pressure * 10; // MS5837 only reports to 0.1 mbar
     float temperature = TEMP * 0.01f;
 
-    _copy_to_frontend(_instance, (float)pressure, temperature);
+    // Pressure sensor filtering COSTUM FILTER
+    // EXM filter: y[n] = alpha * x[n] + (1 - alpha) * y[n-1]
+    //https://www.sciencedirect.com/topics/social-sciences/exponential-smoothing
+    const float alpha = 0.7f; // can be changed, just for now like this
+
+    if (! _filter_initialized) {
+        _filtered_presssure = (float)pressure;
+        _filter_initialized = true;
+    } else {
+        // Formula from above
+        _filtered_presssure = alpha * (float)pressure + (1 - alpha) * _filtered_presssure;
+    }
+    
+    _copy_to_frontend(_instance, _filtered_presssure, temperature);
 }
 
 #endif  // AP_BARO_MS56XX_ENABLED

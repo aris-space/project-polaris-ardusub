@@ -104,6 +104,10 @@ private:
 
     bool _discard_next;
 
+    //for Pressure sensor filtering
+    float _filtered_presssure;
+    bool _filter_initialized = false;;
+
     enum MS56XX_TYPE _ms56xx_type;
 };
 
