@@ -61,6 +61,8 @@ AP_Baro_MS56XX::AP_Baro_MS56XX(AP_Baro &baro, AP_HAL::OwnPtr<AP_HAL::Device> dev
     : AP_Baro_Backend(baro)
     , _dev(std::move(dev))
     , _ms56xx_type(ms56xx_type)
+    , _filter_initialized(false)
+    , _filtered_pressure(0.0f)
 {
 }
 
@@ -514,7 +516,19 @@ void AP_Baro_MS56XX::_calculate_5837()
     pressure = pressure * 10; // MS5837 only reports to 0.1 mbar
     float temperature = TEMP * 0.01f;
 
-    _copy_to_frontend(_instance, (float)pressure, temperature);
+    // Pressure sensor filtering COSTUM FILTER
+    // EXM filter: y[n] = alpha * x[n] + (1 - alpha) * y[n-1]
+    //https://www.sciencedirect.com/topics/social-sciences/exponential-smoothing
+    const float alpha = 0.7f; // can be changed, just for now like this
+
+    if (!_filter_initialized) {
+        _filtered_pressure = (float)pressure;
+        _filter_initialized = true;
+    } else {
+        _filtered_pressure = alpha * (float)pressure + (1.0f - alpha) * _filtered_pressure;
+    }
+
+    _copy_to_frontend(_instance, _filtered_pressure, temperature);
 }
 
 #endif  // AP_BARO_MS56XX_ENABLED

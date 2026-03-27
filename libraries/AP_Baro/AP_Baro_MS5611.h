@@ -105,6 +105,10 @@ private:
     bool _discard_next;
 
     enum MS56XX_TYPE _ms56xx_type;
+
+    // MS5837 optional exponential pressure filter state
+    bool _filter_initialized;
+    float _filtered_pressure;
 };
 
 #endif  // AP_BARO_MS56XX_ENABLED
