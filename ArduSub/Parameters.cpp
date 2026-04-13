@@ -746,6 +746,13 @@ const AP_Param::GroupInfo ParametersG2::var_info[] = {
     // @User: Standard
     AP_GROUPINFO("ORIGIN_ALT", 21, ParametersG2, backup_origin_alt, 0),
 
+    // @Param: AHLD_MANYW
+    // @DisplayName: Alt Hold manual yaw
+    // @Description: When set to 1, ALT_HOLD keeps roll/pitch/depth stabilization but uses manual yaw passthrough (same scaling as MANUAL mode / ACRO_YAW_P). When 0, default ALT_HOLD yaw (rate input + heading hold) is used.
+    // @Values: 0:Disabled,1:Enabled
+    // @User: Standard
+    AP_GROUPINFO("AHLD_MANYW", 22, ParametersG2, ahld_manyw, 0),
+
     // @Group: ACTUATOR
     // @Path: ../ArduSub/actuators.cpp
     AP_SUBGROUPINFO(actuators, "ACTUATOR", 23, ParametersG2, Actuators),
