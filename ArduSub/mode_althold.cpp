@@ -64,11 +64,21 @@ void ModeAlthold::run_pre()
         target_pitch = degrees(target_pitch);
         target_yaw = degrees(target_yaw);
 
-        attitude_control->input_euler_angle_roll_pitch_yaw(target_roll * 1e2f, target_pitch * 1e2f, target_yaw * 1e2f, true);
+        const float yaw_cd = (g2.ahld_manyw.get() != 0)
+            ? float(ahrs.yaw_sensor)
+            : target_yaw * 1e2f;
+        attitude_control->input_euler_angle_roll_pitch_yaw(target_roll * 1e2f, target_pitch * 1e2f, yaw_cd, true);
         return;
     }
 
     sub.get_pilot_desired_lean_angles(channel_roll->get_control_in(), channel_pitch->get_control_in(), target_roll, target_pitch, attitude_control->get_althold_lean_angle_max_cd());
+
+    // Manual yaw (AHLD_MANYW): roll/pitch/depth unchanged; yaw is pass-through like MANUAL.
+    if (g2.ahld_manyw.get() != 0) {
+        attitude_control->input_euler_angle_roll_pitch_yaw(target_roll, target_pitch, float(ahrs.yaw_sensor), true);
+        sub.last_pilot_heading = ahrs.yaw_sensor;
+        return;
+    }
 
     // get pilot's desired yaw rate
     float yaw_input = channel_yaw->pwm_to_angle_dz_trim(channel_yaw->get_dead_zone() * sub.gain, channel_yaw->get_radio_trim());

@@ -147,6 +147,11 @@ void Sub::run_rate_controller()
     if (control_mode != Mode::Number::MANUAL && control_mode != Mode::Number::MOTOR_DETECT) {
         // run low level rate controllers that only require IMU data and set loop time
         attitude_control.rate_controller_run();
+        // ALT_HOLD with AHLD_MANYW: same yaw passthrough as MANUAL (after roll/pitch rate PIDs)
+        if (control_mode == Mode::Number::ALT_HOLD && g2.ahld_manyw.get() != 0) {
+            motors.set_yaw(channel_yaw->norm_input() * g.acro_yaw_p / ACRO_YAW_P);
+            attitude_control.get_rate_yaw_pid().reset_I();
+        }
     }
 }
 

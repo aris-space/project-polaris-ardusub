@@ -388,6 +388,11 @@ public:
     AP_Float backup_origin_lat;
     AP_Float backup_origin_lon;
     AP_Float backup_origin_alt;
+
+    // When non-zero, ALT_HOLD uses pass-through yaw (same as MANUAL) while
+    // keeping roll/pitch stabilization and depth hold.
+    AP_Int8 ahld_manyw;
+
     Actuators actuators;
 
 };
