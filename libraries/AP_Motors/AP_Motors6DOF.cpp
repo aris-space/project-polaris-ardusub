@@ -179,11 +179,11 @@ void AP_Motors6DOF::setup_motors(motor_frame_class frame_class, motor_frame_type
     case SUB_FRAME_CUSTOM: // custon frame added for our specific use case
         _frame_class_string = "CUSTOM";
         add_motor_raw_6dof(AP_MOTORS_MOT_1, 0, 0, 0, 0, 1.0f, 0, 1);            // forward thruster (x)
-        add_motor_raw_6dof(AP_MOTORS_MOT_2, -0.237, 0, 0.8422, 0, 0, -1.0f, 2); // lateral back thruster (y)
-        add_motor_raw_6dof(AP_MOTORS_MOT_3, 0.994, -0.876, 0, 0.57, 0, 0, 3);   // upwards left thruster (z)
-        add_motor_raw_6dof(AP_MOTORS_MOT_4, -1.0f, -0.876, 0, 0.57, 0, 0, 4);   // upwards right thruster (z)
+        add_motor_raw_6dof(AP_MOTORS_MOT_2, 0, 0, 0.775, 0, 0, -1.0f, 2); // lateral back thruster (y)
+        add_motor_raw_6dof(AP_MOTORS_MOT_3, 1.0, -0.833, 0, 0.6, 0, 0, 3);   // upwards left thruster (z)
+        add_motor_raw_6dof(AP_MOTORS_MOT_4, -1.0f, -0.833, 0, 0.6, 0, 0, 4);   // upwards right thruster (z)
         add_motor_raw_6dof(AP_MOTORS_MOT_5, 0, 1.0f, 0, 1.0f, 0, 0, 5);         // upwards front thruster (z)
-        add_motor_raw_6dof(AP_MOTORS_MOT_6, -0.237, 0, -1.0f, 0, 0, -1.0f, 6);  // lateral front thruster (y)
+        add_motor_raw_6dof(AP_MOTORS_MOT_6, -0, 0, -1.0f, 0, 0, -1.0f, 6);  // lateral front thruster (y)
         break;
 
     case SUB_FRAME_SIMPLEROV_3:
