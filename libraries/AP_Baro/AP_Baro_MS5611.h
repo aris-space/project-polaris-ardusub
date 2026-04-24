@@ -106,9 +106,20 @@ private:
 
     enum MS56XX_TYPE _ms56xx_type;
 
-    // MS5837 optional exponential pressure filter state
-    bool _filter_initialized;
+    bool _filter_initialized = false;
+    
+    // Current filtered output
     float _filtered_pressure;
+    
+    // Memory for previous outputs (y[n-1] and y[n-2])
+    float _filtered_pressure_minus1;
+    float _filtered_pressure_minus2;
+
+    // Filter Coefficients (b0, a1, a2)
+    // Using static constexpr is most efficient for CPU performance
+    static constexpr float _filter_b0 = 0.2f;
+    static constexpr float _filter_a1 = -0.6f;
+    static constexpr float _filter_a2 = -0.2f;
 };
 
 #endif  // AP_BARO_MS56XX_ENABLED

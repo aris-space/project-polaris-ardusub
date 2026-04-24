@@ -61,8 +61,9 @@ AP_Baro_MS56XX::AP_Baro_MS56XX(AP_Baro &baro, AP_HAL::OwnPtr<AP_HAL::Device> dev
     : AP_Baro_Backend(baro)
     , _dev(std::move(dev))
     , _ms56xx_type(ms56xx_type)
-    , _filter_initialized(false)
     , _filtered_pressure(0.0f)
+    , _filtered_pressure_minus1(0.0f) // Add this
+    , _filtered_pressure_minus2(0.0f)
 {
 }
 
@@ -517,15 +518,21 @@ void AP_Baro_MS56XX::_calculate_5837()
     float temperature = TEMP * 0.01f;
 
     // Pressure sensor filtering COSTUM FILTER
-    // EXM filter: y[n] = alpha * x[n] + (1 - alpha) * y[n-1]
-    //https://www.sciencedirect.com/topics/social-sciences/exponential-smoothing
-    const float alpha = 0.7f; // can be changed, just for now like this
 
     if (!_filter_initialized) {
+        _filtered_pressure_minus1 = (float)pressure;
+        _filtered_pressure_minus2 = (float)pressure;
         _filtered_pressure = (float)pressure;
         _filter_initialized = true;
     } else {
-        _filtered_pressure = alpha * (float)pressure + (1.0f - alpha) * _filtered_pressure;
+        // Difference Equation: y[n] = b0*x[n] - a1*y[n-1] - a2*y[n-2]
+        _filtered_pressure = (_filter_b0 * (float)pressure) 
+                             - (_filter_a1 * _filtered_pressure_minus1) 
+                             - (_filter_a2 * _filtered_pressure_minus2);
+
+        // Update state memory for next iteration
+        _filtered_pressure_minus2 = _filtered_pressure_minus1;
+        _filtered_pressure_minus1 = _filtered_pressure;
     }
 
     _copy_to_frontend(_instance, _filtered_pressure, temperature);
