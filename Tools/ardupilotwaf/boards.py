@@ -267,6 +267,9 @@ class Board:
                 '-Wno-format-contains-nul',
                 '-fsingle-precision-constant', # force const vals to be float , not double. so 100.0 means 100.0f
             ]
+            env.CXXFLAGS += [
+                '-Wno-stringop-truncation',
+            ]
             if self.cc_version_gte(cfg, 7, 4):
                 env.CXXFLAGS += [
                     '-Werror=implicit-fallthrough',
